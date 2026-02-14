@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Mercado Preso | Onde o crime compensa</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <header>
+            <h1>🚔 Mercado Preso</h1>
+            <p>A liberdade canta, mas o preço é alto.</p>
+        </header>
+
+        <main>
+            <h2>Lista de Procurados (Usuários)</h2>
+            <ul id="user-list">
+                <li>Carregando meliantes...</li>
+            </ul>
+        </main>
+
+        <script>
+            async function fetchUsers() {
+                try {
+                    const response = await fetch(
+                        "http://localhost:8080/api/users",
+                    );
+
+                    const users = await response.json();
+
+                    const listElement = document.getElementById("user-list");
+                    listElement.innerHTML = "";
+
+                    users.forEach((user) => {
+                        const li = document.createElement("li");
+                        li.textContent = `${user.fullName} - Reputação: ${user.reputationScore} (CPF: ${user.cpf})`;
+
+                        if (user.reputationScore < 50) li.style.color = "red";
+                        listElement.appendChild(li);
+                    });
+                } catch (error) {
+                    console.error("Erro ao buscar meliantes:", error);
+                    document.getElementById("user-list").innerHTML =
+                        '<li style="color:red">Erro: A polícia derrubou o servidor!</li>';
+                }
+            }
+            fetchUsers();
+        </script>
+    </body>
+</html>
